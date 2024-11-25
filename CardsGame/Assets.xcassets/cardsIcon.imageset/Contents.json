@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "ace-poker-card-out-of-the-hole-illustration-logo-free-vector.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "ace-poker-card-out-of-the-hole-illustration-logo-free-vector 1.jpg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "ace-poker-card-out-of-the-hole-illustration-logo-free-vector 2.jpg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
