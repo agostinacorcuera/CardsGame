@@ -1,3 +1,11 @@
+//
+//  CardView.swift
+//  CardsGame
+//
+//  Created by Agostina Corcuera on 26/11/2024.
+//
+
+import SwiftUI
 
 struct CardView: View {
     let imageName: String
