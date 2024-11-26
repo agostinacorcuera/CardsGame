@@ -22,13 +22,9 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack() {
-                
-                Image("cardsIcon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80)
-                    .cornerRadius(8)
-                    .padding(.top, 20)
+                Text("Cards")
+                    .font(.largeTitle)
+                    .bold(true)
                 
                 Spacer()
                 HStack {
@@ -66,9 +62,10 @@ struct ContentView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
                         .cornerRadius(10)
                 }
+                .buttonStyle(.borderedProminent)
+                .tint(.cyan)
                 
                 Spacer()
                 HStack {
