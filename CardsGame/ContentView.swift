@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var playerCard = "card-" + String(Int.random(in: 2...14))
+    @State private var cpuCard = "card-" + String(Int.random(in: 2...14))
+    @State private var playerScore = 0
+    @State private var cpuScore = 0
+    
     var body: some View {
         
         ZStack {
@@ -27,12 +33,12 @@ struct ContentView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Image("card-2")
+                    Image(playerCard)
                         .resizable()
                         .cornerRadius(15)
                         .frame(width: 150, height: 280)
                     Spacer()
-                    Image("card-3")
+                    Image(cpuCard)
                         .resizable()
                         .cornerRadius(15)
                         .frame(width: 150, height: 280)
@@ -41,9 +47,27 @@ struct ContentView: View {
                 .padding(20)
                 
                 Spacer()
-                Button("DEAL") {
+                Button {
+                
+                    let playerRard = Int.random(in: 2...14)
+                    let cpuRard = Int.random(in: 2...14)
                     
-                    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+                    playerCard = "card-" + String(playerRard)
+                    cpuCard = "card-" + String(cpuRard)
+                    
+                    if playerRard > cpuRard {
+                        playerScore += 1
+                    } else if playerRard < cpuRard  {
+                        cpuScore += 1
+                    }
+                    
+                } label: {
+                    Text("Deal")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
                 }
                 
                 Spacer()
@@ -53,7 +77,7 @@ struct ContentView: View {
                         Text("Player")
                             .font(.title2)
                             .padding(.bottom, 10)
-                        Text("0")
+                        Text(String(playerScore))
                             .font(.largeTitle)
                     }
                     
@@ -62,7 +86,7 @@ struct ContentView: View {
                         Text("CPU")
                             .font(.title2)
                             .padding(.bottom, 10)
-                        Text("0")
+                        Text(String(cpuScore))
                             .font(.largeTitle)
                     }
                     Spacer()
