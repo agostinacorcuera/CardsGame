@@ -30,13 +30,13 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                if let result = viewModel.roundResult {
-                    Text(result)
-                        .font(.headline)
+                ZStack {
+                    Text(viewModel.roundResult ?? " ")
+                        .font(.title3)
                         .foregroundColor(.yellow)
-                        .transition(.opacity)
-                        .padding(.bottom, 10)
+                        .padding(.bottom, 20)
                 }
+                .frame(height: 30)
                 
                 Button("Deal") {
                     viewModel.dealCards()
@@ -62,7 +62,6 @@ struct ContentView: View {
         }
     }
 }
-
 
 #Preview {
     ContentView()

@@ -17,7 +17,10 @@ final class GameViewModel: ObservableObject {
     func dealCards() {
         playerCard = Card.random()
         cpuCard = Card.random()
+        updateRoundResult()
+    }
 
+    func updateRoundResult() {
         if playerCard.value > cpuCard.value {
             playerScore += 1
             roundResult = "Player Wins!"
@@ -27,11 +30,11 @@ final class GameViewModel: ObservableObject {
         } else {
             roundResult = "It's a Draw!"
         }
-        
-        // The result is deleted after 2 seconds
-        //TODO: SMALL BUG DELETING RESULT WHEN PRESSING BUTTON SEVERAL TIMES IN A ROW. TO BE FIXED
+
+        // Elimina el resultado después de 2 segundos
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.roundResult = nil
         }
     }
 }
+
