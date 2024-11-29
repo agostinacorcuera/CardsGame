@@ -5,18 +5,72 @@
 //  Created by Agostina Corcuera on 26/11/2024.
 //
 
-enum Card: String, CaseIterable {
-    case card2 = "card-2", card3 = "card-3", card4 = "card-4", card5 = "card-5"
-    case card6 = "card-6", card7 = "card-7", card8 = "card-8", card9 = "card-9"
-    case card10 = "card-10", card11 = "card-11", card12 = "card-12"
-    case card13 = "card-13", card14 = "card-14"
+import SwiftUI
+
+enum Suit: String, CaseIterable {
+    case spades = "spades"
+    case hearts = "hearts"
+    case diamonds = "diamonds"
+    case clubs = "clubs"
+}
+
+enum Card: Identifiable, Equatable {
+    case standard(value: Int, suit: Suit) // 1-13 corresponden a A, 2-10, J, Q, K
+    case joker(color: JokerColor)        // Joker rojo o negro
     
-    var value: Int {
-        Int(rawValue.split(separator: "-")[1]) ?? 0
+    var id: String { imageName } // Identificador único para usar en listas
+    
+    var imageName: String {
+        switch self {
+        case .standard(let value, let suit):
+            // Mapear valores a nombres legibles (por ejemplo, card-A-spades)
+            let cardValue: String
+            switch value {
+            case 11: cardValue = "J" // Jack
+            case 12: cardValue = "Q" // Queen
+            case 13: cardValue = "K" // King
+            case 14: cardValue = "A" // As
+            default: cardValue = "\(value)"
+            }
+            return "\(suit.rawValue)-\(cardValue)"
+        case .joker(let color):
+            return "card-joker-\(color.rawValue)"
+        }
     }
     
-    static func random() -> Card {
-        Card.allCases.randomElement()!
+    static let cardBack = "card-back" // Reverso de la carta
+}
+
+enum JokerColor: String {
+    case red = "red"
+    case black = "black"
+}
+
+// Generación de mazo completo
+extension Card {
+    static func fullDeck(includeJokers: Bool = true) -> [Card] {
+        var deck: [Card] = []
+        
+        // Agregar las 52 cartas estándar
+        for suit in Suit.allCases {
+            for value in 2...14 {
+                deck.append(.standard(value: value, suit: suit))
+            }
+        }
+        
+        // Agregar los jokers si es necesario
+        if includeJokers {
+            deck.append(.joker(color: .red))
+            deck.append(.joker(color: .black))
+        }
+        
+        return deck
     }
 }
 
+extension Card {
+    static func random(includeJokers: Bool = false) -> Card {
+        let deck = fullDeck(includeJokers: includeJokers)
+        return deck.randomElement()!
+    }
+}

@@ -12,11 +12,12 @@ struct CoinButtonView: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: {
-            action()
-        }) {
-            CoinView(imageName: imageName)
+        Button(action: action) {
+            Image(imageName)
+                .resizable()
+                .frame(width: 80, height: 80)
+                .shadow(radius: 5)
         }
-        .buttonStyle(PlainButtonStyle()) 
+        .buttonStyle(PlainButtonStyle())
     }
 }

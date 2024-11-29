@@ -8,39 +8,77 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = GameViewModel()
-    
+    @StateObject private var viewModel = PokerGameViewModel()
+
     var body: some View {
         ZStack {
-            Color(red: 0.1, green: 0.5, blue: 0.1)
-                .ignoresSafeArea()
-            
+            Color.green.ignoresSafeArea()
+
             VStack {
+                // Logo
                 Image("mini-poker-logo")
                     .resizable()
-                    .frame(width: 150, height: 80)
-                
+                    .frame(width: 180, height: 90)
+                    .padding(.top, 10)
+
                 Spacer()
-                
-                HStack {
-                    ScoreView(title: "Player", score: viewModel.playerScore)
-                        .padding(.trailing, 30)
-                        .foregroundColor(.white)
-                    ScoreView(title: "CPU", score: viewModel.cpuScore)
-                        .padding(.leading, 30)
-                        .foregroundColor(.white)
+
+                // CPU cards (fixed space)
+                HStack(spacing: 10) {
+                    ForEach(0..<2, id: \.self) { index in
+                        ZStack {
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(width: 70, height: 100) // Fixed space
+                            if viewModel.cpuCards.indices.contains(index) {
+                                Image(viewModel.showCpuCards ? viewModel.cpuCards[index].imageName : Card.cardBack)
+                                    .resizable()
+                                    .frame(width: 70, height: 100)
+                            }
+                        }
+                    }
                 }
-                
+
                 Spacer()
-                
-                HStack(spacing: 15) {
-                    CardView(imageName: viewModel.playerCard.rawValue)
-                    CardView(imageName: viewModel.cpuCard.rawValue)
+
+                // Community cards (fixed space for 5 cards)
+                HStack(spacing: 10) {
+                    ForEach(0..<5, id: \.self) { index in
+                        ZStack {
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(width: 70, height: 100) // Fixed space
+                            if viewModel.communityCards.indices.contains(index) {
+                                Image(viewModel.isCommunityCardVisible(viewModel.communityCards[index]) ? viewModel.communityCards[index].imageName : Card.cardBack)
+                                    .resizable()
+                                    .frame(width: 70, height: 100)
+                            }
+                        }
+                    }
                 }
-                .padding(.bottom, 20)
-                
+                .padding(.horizontal, 20)
+
                 Spacer()
-                
+
+                // Player cards (fixed space)
+                HStack(spacing: 10) {
+                    ForEach(0..<2, id: \.self) { index in
+                        ZStack {
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(width: 70, height: 100) // Fixed space
+                            if viewModel.playerCards.indices.contains(index) {
+                                Image(viewModel.playerCards[index].imageName)
+                                    .resizable()
+                                    .frame(width: 70, height: 100)
+                            }
+                        }
+                    }
+                }
+
+                Spacer()
+
+                // Bet options
                 HStack {
                     CoinButtonView(imageName: "100-COIN") {
                         viewModel.placeBet(amount: 100)
@@ -52,34 +90,58 @@ struct ContentView: View {
                         viewModel.placeBet(amount: 1000)
                     }
                 }
-                
-                Spacer()
-                
-                ZStack {
-                    Text(viewModel.roundResult ?? " ")
-                        .font(.title3)
-                        .foregroundColor(.yellow)
-                        .padding(.bottom, 20)
-                }
-                .frame(height: 30)
-                
-                CustomButton(title: "Deal", color: .cyan) {
-                    viewModel.dealCards()
-                }
-                
+                .padding(.vertical, 10)
+
                 Spacer()
 
-                HStack {
-                    Text("💰 Cash: $\(viewModel.playerCash)")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding(.top, 20)
+                // Cash and action button
+                VStack(alignment: .leading) {
+                    // Bet and Cash Info
+                    HStack {
+                        Text("🎲 Bet: \(viewModel.currentBet)")
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    HStack {
+                        Text("💰 Cash: $\(viewModel.playerCash)")
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
                     Spacer()
+                    
+                    if let result = viewModel.roundResult {
+                        Text(result)
+                            .font(.headline)
+                            .foregroundColor(.yellow)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 10)
+                    }
+                    
+                    // Dynamic Button
+                    CustomButton(
+                        title: viewModel.gamePhase == .idle ? "Start" :
+                               viewModel.gamePhase == .showDown ? "Restart" : "Continue",
+                        color: .blue
+                    ) {
+                        if viewModel.gamePhase == .idle {
+                            viewModel.dealRound()
+                        } else if viewModel.gamePhase == .showDown {
+                            viewModel.resetGame()
+                        } else {
+                            viewModel.nextPhase()
+                        }
+                    }
+                    .disabled(viewModel.gamePhase == .idle && viewModel.currentBet > 0)
                 }
-                .padding(.horizontal, 20)
-                
-                Spacer()
+                .padding(.horizontal, 50)
             }
             .padding()
         }

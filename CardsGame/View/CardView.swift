@@ -13,7 +13,8 @@ struct CardView: View {
     var body: some View {
         Image(imageName)
             .resizable()
+            .frame(width: 70, height: 100)
             .cornerRadius(10)
-            .frame(width: 120, height: 200)
+            .shadow(radius: 5)
     }
 }
